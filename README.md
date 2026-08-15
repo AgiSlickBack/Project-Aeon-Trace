@@ -10,20 +10,23 @@ dependencies — including the live dashboard's web server.
 
 ```powershell
 cargo build          # compile the engine
-cargo run             # launch the live web dashboard at http://127.0.0.1:7878
+cargo run             # launch the live web dashboard for this computer and your LAN
 cargo run -- cli      # print a one-shot text report (sample telemetry)
 cargo run -- 0.01 0.08 1.0 1.0 1.0025 0.0025   # one-shot report, custom telemetry
 cargo test            # run the full unit test suite (22 tests)
 ```
 
-Override the dashboard port with the `AEON_PORT` environment variable.
+The dashboard listens on `0.0.0.0:7878` by default, so other devices on the
+same Wi-Fi/LAN can open it while the app is running. The startup banner prints
+the exact URL to use from another device. Override the bind address or port
+with `AEON_HOST` and `AEON_PORT`; use `AEON_HOST=127.0.0.1` for local-only mode.
 
 ## Live dashboard
 
 `cargo run` starts a zero-dependency HTTP server (hand-rolled on
-`std::net`/`std::io` — no web framework) bound to `127.0.0.1` only, never
-reachable from other machines. It serves a dark, sci-fi styled single-page
-dashboard (`assets/index.html`) where you can edit telemetry, hit
+`std::net`/`std::io` — no web framework) bound to all local network interfaces
+by default. It serves a dark, sci-fi styled single-page dashboard
+(`assets/index.html`) where you can edit telemetry, hit
 **RECALIBRATE**, **SAMPLE**, or **RANDOMIZE**, and watch the gradients,
 invariant strain, and recalibrated `α`/`G`/`c` update live, backed by the
 same engine and validation as the CLI. The JSON API it calls is
